@@ -1,10 +1,11 @@
+from contextlib import contextmanager
 import datetime
 import re
 from xml.sax.saxutils import unescape
 
 from lxml import etree
 
-from .dbmodels import Forum, Post, Tag
+from .dbmodels import Forum, Post, Tag, post_tags
 
 
 DATE_ISOFORMAT = '%Y-%m-%dT%H:%M:%S.%f'
@@ -49,6 +50,17 @@ attr_to_column_map = {
 }
 
 
+@contextmanager
+def drop_indexes(session, table):
+    for index in table.indexes:
+        index.drop(session.connection())
+    try:
+        yield
+    finally:
+        for index in table.indexes:
+            index.create(session.connection())
+
+
 def import_forum_posts(session, xml, forum):
     attr_to_type_map = {
         'Id': int,
@@ -70,9 +82,11 @@ def import_forum_posts(session, xml, forum):
 
     for index, row in enumerate(xml.getroot()):
         try:
-            kwargs = {attr_to_column_map[attr]: attr_to_type_map[attr](value)
-                      for attr, value in row.attrib.iteritems()
-                      if attr in attr_to_column_map}
+            kwargs = {
+                attr_to_column_map[attr]: attr_to_type_map[attr](value)
+                for attr, value in row.attrib.iteritems()
+                if attr in attr_to_column_map
+            }
         except Exception as e:
             print u'Error import row: {!s}'.format(unicode(e))
             continue
@@ -95,5 +109,9 @@ def import_forum(session, forum_name, filename):
 
     with open(filename, 'r') as posts_file:
         xml = etree.parse(posts_file)
-    import_forum_posts(session, xml, forum)
+
+    with drop_indexes(session, Tag.__table__), \
+            drop_indexes(session, Post.__table__), \
+            drop_indexes(session, post_tags):
+        import_forum_posts(session, xml, forum)
     session.commit()
