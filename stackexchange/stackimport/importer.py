@@ -68,7 +68,7 @@ def import_forum_posts(session, xml, forum):
         'FavoriteCount': int,
     }
 
-    for row in xml.getroot():
+    for index, row in enumerate(xml.getroot()):
         try:
             kwargs = {attr_to_column_map[attr]: attr_to_type_map[attr](value)
                       for attr, value in row.attrib.iteritems()
@@ -79,13 +79,19 @@ def import_forum_posts(session, xml, forum):
         post = Post(forum=forum, **kwargs)
         session.add(post)
 
+        if (index + 1) % 1000 == 0:
+            session.commit()
+
+    session.commit()
+
 
 def import_forum(session, forum_name, filename):
     if session.query(Forum).filter(Forum.name == forum_name).count() == 0:
         forum = Forum(name=forum_name)
         session.add(forum)
     else:
-        forum = session.query(Tag).filter(Forum.name == forum_name).one()
+        forum = session.query(Forum).filter(Forum.name == forum_name).one()
+    session.commit()
 
     with open(filename, 'r') as posts_file:
         xml = etree.parse(posts_file)
