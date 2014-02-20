@@ -4,22 +4,16 @@ from xml.sax.saxutils import unescape
 
 from lxml import etree
 
-from .dbmodels import Post, Tag
+from .dbmodels import Forum, Post, Tag
 
 
 DATE_ISOFORMAT = '%Y-%m-%dT%H:%M:%S.%f'
 TAGS_RE = re.compile('<(.*?)>')
 
 
-# engine = create_engine('postgresql+psycopg2://simon@/simon')
-# Session = sessionmaker(bind=engine)
-# session = Session()
-# # Base.metadata.create_all(engine)
-
-
 strptime = lambda s: datetime.datetime.strptime(
     s + '000', DATE_ISOFORMAT)
-unicode_decode = lambda s: s.decode('utf-8')
+unicode_decode = lambda s: s  # .decode('utf-8')
 
 
 def add_tags(session, tags_string):
@@ -55,7 +49,7 @@ attr_to_column_map = {
 }
 
 
-def import_forum_posts(session, xml):
+def import_forum_posts(session, xml, forum):
     attr_to_type_map = {
         'Id': int,
         'PostTypeId': int,
@@ -74,7 +68,6 @@ def import_forum_posts(session, xml):
         'FavoriteCount': int,
     }
 
-    session.begin()
     for row in xml.getroot():
         try:
             kwargs = {attr_to_column_map[attr]: attr_to_type_map[attr](value)
@@ -83,12 +76,18 @@ def import_forum_posts(session, xml):
         except Exception as e:
             print u'Error import row: {!s}'.format(unicode(e))
             continue
-        post = Post(**kwargs)
+        post = Post(forum=forum, **kwargs)
         session.add(post)
-    session.commit()
 
 
 def import_forum(session, forum_name, filename):
-    with open('bicycles.stackexchange.com/Posts.xml', 'r') as posts_file:
+    if session.query(Forum).filter(Forum.name == forum_name).count() == 0:
+        forum = Forum(name=forum_name)
+        session.add(forum)
+    else:
+        forum = session.query(Tag).filter(Forum.name == forum_name).one()
+
+    with open(filename, 'r') as posts_file:
         xml = etree.parse(posts_file)
-    import_forum_posts(session, xml)
+    import_forum_posts(session, xml, forum)
+    session.commit()

@@ -28,4 +28,4 @@ def main():
     if args.create:
         Base.metadata.create_all(engine)
 
-    import_forum(args.forum_name, args.file)
+    import_forum(session, args.forum_name, args.file)

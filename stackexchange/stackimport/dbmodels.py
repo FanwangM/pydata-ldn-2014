@@ -3,7 +3,7 @@
 
 from sqlalchemy import (
     Column, Integer, DateTime, UnicodeText, Table, ForeignKey)
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -17,7 +17,10 @@ post_tags = Table(
 
 
 class Forum(Base):
-    pass
+    __tablename__ = 'forums'
+
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
+    name = Column(UnicodeText, index=True)
 
 
 class Tag(Base):
@@ -45,5 +48,8 @@ class Post(Base):
     # tags
     answer_count = Column(Integer)
     favorite_count = Column(Integer)
+
+    forum_id = Column(Integer, ForeignKey('forums.id'))
+    forum = relationship('Forum', backref=backref('posts', order_by=id))
 
     tags = relationship('Tag', secondary=post_tags, backref='posts')
