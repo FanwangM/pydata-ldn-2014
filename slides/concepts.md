@@ -84,4 +84,3 @@ Data are 'normalized':
 
 - robust against deletion and changes
 ]
----
