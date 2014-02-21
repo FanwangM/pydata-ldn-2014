@@ -80,7 +80,8 @@ def import_forum_posts(session, xml, forum):
         'FavoriteCount': int,
     }
 
-    for index, row in enumerate(xml.getroot()):
+    for index, event in enumerate(xml):
+        _, row = event
         try:
             kwargs = {
                 attr_to_column_map[attr]: attr_to_type_map[attr](value)
@@ -90,6 +91,7 @@ def import_forum_posts(session, xml, forum):
         except Exception as e:
             print u'Error import row: {!s}'.format(unicode(e))
             continue
+        row.clear()
         post = Post(forum=forum, **kwargs)
         session.add(post)
 
@@ -108,7 +110,7 @@ def import_forum(session, forum_name, filename):
     session.commit()
 
     with open(filename, 'r') as posts_file:
-        xml = etree.parse(posts_file)
+        xml = etree.iterparse(posts_file, tag='row')
 
         with drop_indexes(session, Tag.__table__), \
                 drop_indexes(session, Post.__table__), \
