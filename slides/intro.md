@@ -17,11 +17,11 @@ StackOverflow makes its data publicly available:
 
 Problem:
 
-- ~ 8 millions questions, ~23 Gb xml for posts
+- ~ 18 millions questions, ~23 Gb xml for posts alone
 - too large to use pandas on laptop
 - multiple tables, relationships (e.g. tags)
 
-Suggestion: store in a database, load the data we care about in pandas.
+Idea: store in a database, load the data we care about in pandas.
 ]
 
 ---
@@ -36,11 +36,11 @@ playing python, numpy, pandas and postgres to their strenghts:
 
 - importing data from postgres into pandas
 
-- how to use sqlalchemy to deal with Database without too much pain
+- how to use sqlalchemy to deal with databases without too much pain
 
 - using pandasql to make some pandas data manipulation easier
 
-- handling semi-structured data in postgres
+- handling semi-structured data in postgres through hstore, sqlalchemy
 ]
 
 ---
