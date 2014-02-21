@@ -17,20 +17,6 @@ strptime = lambda s: datetime.datetime.strptime(
 unicode_decode = lambda s: s  # .decode('utf-8')
 
 
-def add_tags(session, tags_string):
-    tags = []
-    tags_string = unicode_decode(unescape(tags_string))
-    for tag_text in TAGS_RE.findall(tags_string):
-        if session.query(Tag).filter(Tag.text == tag_text).count() == 0:
-            tag = Tag(text=tag_text)
-            session.add(tag)
-            tags.append(tag)
-        else:
-            tag = session.query(Tag).filter(Tag.text == tag_text).one()
-            tags.append(tag)
-    return tags
-
-
 attr_to_column_map = {
     'Id': 'id',
     'PostTypeId': 'post_type_id',
@@ -59,6 +45,20 @@ def drop_indexes(session, table):
     finally:
         for index in table.indexes:
             index.create(session.connection())
+
+
+def add_tags(session, tags_string):
+    tags = []
+    tags_string = unicode_decode(unescape(tags_string))
+    for tag_text in TAGS_RE.findall(tags_string):
+        if session.query(Tag).filter(Tag.text == tag_text).count() == 0:
+            tag = Tag(text=tag_text)
+            session.add(tag)
+            tags.append(tag)
+        else:
+            tag = session.query(Tag).filter(Tag.text == tag_text).one()
+            tags.append(tag)
+    return tags
 
 
 def import_forum_posts(session, xml, forum):
