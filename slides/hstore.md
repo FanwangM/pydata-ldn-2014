@@ -66,5 +66,7 @@ select count(data->'From') from pylist
 ## took ~ 2 ms
 ```
 ]
+<!--
 ---
 # HSTORE and SQLA
+-->
