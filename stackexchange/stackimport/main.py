@@ -1,14 +1,10 @@
 import argparse
 import sys
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
-from .dbmodels import Base
-from .importer import import_forum
-
 
 def connect(db_name):
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
     engine = create_engine('postgresql+psycopg2://simon@/{}'.format(db_name))
     Session = sessionmaker(bind=engine)
     return engine, Session()
@@ -31,6 +27,7 @@ def parse_args():
 
 
 def import_action(session, args):
+    from .importer import import_forum
     import_forum(session, args.forum_name, args.file)
 
 
@@ -44,6 +41,7 @@ def main():
     args = parse_args()
     engine, session = connect(args.db_name)
     if args.create:
+        from .dbmodels import Base
         Base.metadata.create_all(engine)
 
     args.func(session, args)
