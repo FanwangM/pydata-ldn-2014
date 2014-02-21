@@ -110,8 +110,8 @@ def import_forum(session, forum_name, filename):
     with open(filename, 'r') as posts_file:
         xml = etree.parse(posts_file)
 
-    with drop_indexes(session, Tag.__table__), \
-            drop_indexes(session, Post.__table__), \
-            drop_indexes(session, post_tags):
-        import_forum_posts(session, xml, forum)
+        with drop_indexes(session, Tag.__table__), \
+                drop_indexes(session, Post.__table__), \
+                drop_indexes(session, post_tags):
+            import_forum_posts(session, xml, forum)
     session.commit()
