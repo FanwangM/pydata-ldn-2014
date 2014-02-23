@@ -21,7 +21,7 @@ class: top, center
 
  ### 21 July 2014: Keynotes, Lightning talks
 
- ### 22-25 July 2014: Talks, Trainings, Lightning talks
+ ### 22-25 July 2014: Talks, Tutorials, Lightning talks
 
  ### 25 July 2014: Posters
 
