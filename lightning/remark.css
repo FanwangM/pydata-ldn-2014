@@ -34,6 +34,14 @@ h3 { font-size: 1.6em; }
 }
 li p { line-height: 1.25em; }
 
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
 .pos-rel {
   float: absolute;
   top: 10em;
