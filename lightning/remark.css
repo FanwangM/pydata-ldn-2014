@@ -1,5 +1,20 @@
-@import url(http://fonts.googleapis.com/css?family=Droid+Serif);
-@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+@font-face {
+  font-family: 'Droid Serif';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Droid Serif'), local('DroidSerif'), url(images/0AKsP294HTD-nvJgucYTaIbN6UDyHWBl620a-IRfuBk.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Yanone Kaffeesatz';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Yanone Kaffeesatz Regular'), local('YanoneKaffeesatz-Regular'), url(images/YDAoLskQQ5MOAgvHUQCcLRTHiN2BPBirwIkMLKUspj4.woff) format('woff');
+}
+
+
+/* @import url(http://fonts.googleapis.com/css?family=Droid+Serif); */
+/* @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz); */
 
 body {
   font-family: 'Droid Serif';
@@ -19,10 +34,26 @@ h3 { font-size: 1.6em; }
 }
 li p { line-height: 1.25em; }
 
+.pos-rel {
+  float: absolute;
+  top: 10em;
+  left: 10em;
+}
+
 .bottom-right{
   position: fixed;
   right:50px;
   bottom:40px;
+}
+
+.euroscipy-title {
+  position: relative;
+}
+
+.euroscipy-logo {
+  position: absolute;
+  top: 10px;
+  left: 0;
 }
 
 .bottom-left{
