@@ -10,7 +10,9 @@ Python Mailing Lists
 
 * The full ``python-list`` and ``python-dev`` mailing list archives can
   be retrieved in ``mbox`` format with the following ``bash`` snippet,
-  replacing ``${LIST}`` with either ``python-list`` or ``python-dev`::
+  replacing ``${LIST}`` with either ``python-list`` or ``python-dev`
+
+.. code:: bash
 
     MAILMAN_URL="http://mail.python.org/pipermail/${LIST}/"
     for FILENAME in $(wget -O - -q $MAILMAN_URL |
